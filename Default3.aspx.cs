@@ -144,27 +144,32 @@ public partial class Default3 : System.Web.UI.Page
         Font normal = new Font(fontthai, 16);
 
         string ConString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-
         SqlConnection con = new SqlConnection(ConString);
-
         SqlCommand cmd = new SqlCommand();
-
-        cmd.CommandText = "SELECT EN_borrow, Date_borrow, Name, Activity, place, Get_Equipment, Return_Equipment FROM borroww";
-
+        SqlDataReader myRead;
+        cmd.CommandText = "SELECT TOP 1 position FROM user";
         cmd.Connection = con;
-
         con.Open();
-        DataTable dt = new DataTable();
+        myRead = cmd.ExecuteReader();
+        myRead.Read();
 
-            dt.Load(cmd.ExecuteReader());
 
-            if (dt.Rows.Count > 0)
-            {
+        string position = myRead.GetString(myRead.GetOrdinal("position"));
+      //  string Activity = myReader.GetString(myReader.GetOrdinal("Activity"));
+        //string name = myReader.GetString(myReader.GetOrdinal("Name"));
+        //string sAddress1 = myReader.GetString(myReader.GetOrdinal("Address Line 1"));
+        //string sAddress2 = myReader.GetString(myReader.GetOrdinal("Address Line 2"));
+        //string sPost = myReader.GetString(myReader.GetOrdinal("Post Code"));
+        //string sTelephone = myReader.GetString(myReader.GetOrdinal("Telephone Number"));
+        //string sEmail = myReader.GetString(myReader.GetOrdinal("Email Address"));
+        //string sRegistration = myReader.GetString(myReader.GetOrdinal("Registration Number"));
+
                 Paragraph para = new Paragraph();
                 para.FirstLineIndent = 38.1f;
-                para.Add(new Phrase("ข้าพเจ้านาย/นาง/น.ส.", normal));
-                para.Add(new Phrase(dt.Rows[0]["Name"].ToString(), normal));
-                para.Add(new Phrase("ต่ำแหน่ง", normal));
+                para.Add(new Phrase("ข้าพเจ้านาย/นาง/น.ส.\t", normal));
+                para.Add(new Phrase(position + "\t \t", normal));
+                para.Add(new Phrase("ตำแหน่ง", normal));
+               // para.Add(new Phrase(Activity, normal));
                 para.Add(new Phrase("................................................................\n", normal));
                 para.Add(new Phrase("สังกัดหน่วยงาน", normal));
                 para.Add(new Phrase("..............................................................................", normal));
@@ -172,14 +177,14 @@ public partial class Default3 : System.Web.UI.Page
                 para.Add(new Phrase("................................................................\n", normal));
                 para.Add(new Phrase("อีเมล์", normal));
                 para.Add(new Phrase("..........................................................................................\n", normal));
-                return para;
-            }
+           
+            
             con.Close();
 
 
           //  para.Add(new Phrase(“ขออนุมัติให้นักศึกษาจำนวน ” + master.StudentCount + ” คน เดินทางไปราชการต่างประเทศระหว่างวันที่ ” + master.StartDate + ” ถึงวันที่ ” + master.EndDate + ” รวม ” + master.PeriodDay + ” วัน เพื่อดำเนินกิจกรรมดังต่อไปนี้”, normal));
 
-           
+            return para;
     }
            /*    private PdfPTable BodyData() {
                    BaseFont fontthai_Bold = BaseFont.CreateFont(Server.MapPath("/Fonts/THSarabun Bold.ttf"), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
@@ -234,25 +239,56 @@ public partial class Default3 : System.Web.UI.Page
                    Font normal = new Font(fontthai, 16);
                    Paragraph para = new Paragraph();
 
-                  
+                   String ConString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                   SqlConnection con = new SqlConnection(ConString);
+                   SqlCommand cmd = new SqlCommand();
+                   SqlDataReader myReader;
+                   cmd.CommandText = "SELECT EN_borrow, Date_borrow, Name, Activity, place, Get_Equipment, Return_Equipment,Total_use,assign_to,Department,EN_Equipment FROM borroww";
+                   cmd.Connection = con;
+                   con.Open();
+                   myReader = cmd.ExecuteReader();
+                   myReader.Read();
 
-                   para.Add(new Phrase("เพื่อใช้ในกิจกรรม", normal));
-                   para.Add(new Phrase(".........................................................................................", normal));
-                   para.Add(new Phrase("สถานที่", normal));
-                   para.Add(new Phrase("...................................................................\n", normal));
-                   para.Add(new Phrase("ทั้งนี้ขอรับอุปกรณ์ในวันที่", normal));
-                   para.Add(new Phrase(".............................................", normal));
-                   para.Add(new Phrase("และส่งคืนในวันที่", normal));
-                   para.Add(new Phrase(".....................................", normal));
-                   para.Add(new Phrase("รวมระยะเวลายืม", normal));
-                   para.Add(new Phrase("..................", normal));
-                   para.Add(new Phrase("วัน", normal));
-                   para.Add(new Phrase("โดยหมอบหมายให้" +"\t นาย/นาง/น.ส.", normal));
-                   para.Add(new Phrase("..................................................................", normal));
-                   para.Add(new Phrase("หน่วยงาน", normal));
-                   para.Add(new Phrase("........................................................\n", normal));
-                   para.Add(new Phrase("หมายเลขบัตรประจำประชาชน", normal));
-                   para.Add(new Phrase("..................................................................", normal));                   
+
+                   
+                   string Activity = myReader.GetString(myReader.GetOrdinal("Activity"));
+                   string place = myReader.GetString(myReader.GetOrdinal("place"));
+                   string Get_Equipment = myReader.GetString(myReader.GetOrdinal("Get_Equipment"));
+                   string Return_Equipment = myReader.GetString(myReader.GetOrdinal("Return_Equipment"));
+                   string Total_use = myReader.GetString(myReader.GetOrdinal("Total_use"));
+                   string assign_to = myReader.GetString(myReader.GetOrdinal("assign_to"));
+                   string Department = myReader.GetString(myReader.GetOrdinal("Department"));
+                   string EN_Equipment = myReader.GetString(myReader.GetOrdinal("EN_Equipment"));
+                   
+
+
+
+                   para.Add(new Phrase("เพื่อใช้ในกิจกรรม\t \t", normal));
+                   para.Add(new Phrase(Activity, normal));
+                   para.Add(new Phrase(" \t \t \t"));
+                   para.Add(new Phrase("สถานที่" + "\t \t", normal));
+                   para.Add(new Phrase(place, normal));
+                   para.Add(new Phrase("\n"));
+                   para.Add(new Phrase("ทั้งนี้ขอรับอุปกรณ์ในวันที่" + "\t \t", normal));
+                   para.Add(new Phrase(Get_Equipment, normal));
+                   para.Add(new Phrase(" \t \t \t"));
+                   para.Add(new Phrase("และส่งคืนในวันที่" + "\t \t", normal));
+                   para.Add(new Phrase(Return_Equipment, normal));
+                   para.Add(new Phrase(" \t \t \t"));
+                   para.Add(new Phrase("รวมระยะเวลายืม" + "\t \t", normal));
+                   para.Add(new Phrase(Total_use, normal));
+                   para.Add(new Phrase(" \t \t \t"));
+                   para.Add(new Phrase("วัน", normal)); 
+                   para.Add(new Phrase("\n"));
+                   para.Add(new Phrase("โดยหมอบหมายให้" +"\t \t", normal));
+                   para.Add(new Phrase(assign_to, normal));
+                  
+                   para.Add(new Phrase(" หน่วยงาน"+"\t \t", normal));
+                   para.Add(new Phrase(Department, normal));
+                   para.Add(new Phrase("\n"));
+                   para.Add(new Phrase("หมายเลขบัตรประจำประชาชน"+"\t \t", normal));
+                   para.Add(new Phrase(EN_Equipment, normal));
+                             
                    para.Add(new Phrase("เป็นผู้รับมอบหมายอุปกรณ์ดังกล่าวแทนข้าพเจ้า\n", normal));
                    para.Add(new Phrase("ขออนุญาติยืม", bold));
                    para.Add(new Phrase("\n"));
